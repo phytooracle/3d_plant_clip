@@ -1,6 +1,6 @@
 # 3D Plant Clip
 
-This dockerized script takes in a merged point cloud file and a CSV plant locations. It will then output point clouds croped out of the original based on the plant locations given resulting in point clouds of each plant.
+This dockerized script takes in a merged point cloud file and a CSV of plant locations. It will then output point clouds croped out of the original based on the plant locations given resulting in point clouds of each individual plant.
 
 
 ## Inputs
