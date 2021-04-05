@@ -35,20 +35,42 @@ def get_args():
     parser.add_argument('-c',
                         '--csv',
                         help='CSV containing plant locations (Latitude, Longitude)',
-                        metavar='str',
+                        metavar='csv',
+                        type=str,
+                        required=True)
+
+    parser.add_argument('-d',
+                        '--date',
+                        help='Scan date to find the closest RGB detections.',
+                        metavar='date',
                         type=str,
                         required=True)
 
     parser.add_argument('-o',
                         '--outdir',
                         help='Output directory',
-                        metavar='str',
+                        metavar='outdir',
                         type=str,
                         default='plantclip_out')
 
     return parser.parse_args()
 
 
+# --------------------------------------------------
+def nearest_date_df(csv_path, query_date):
+
+    df = pd.read_csv(csv_path)
+    df['date'] = pd.to_datetime(df['date'])
+    df = df.set_index('date')
+    dates = pd.DataFrame(df.index.unique()).set_index('date')
+    focal_date = dates.iloc[dates.index.get_loc(pd.to_datetime(query_date), method='nearest')].name.date().strftime("%Y-%m-%d")
+    print(f'Closest date is {focal_date}.')
+    focal_df = df.loc[focal_date]
+
+    return focal_df
+
+
+# --------------------------------------------------  
 def create_pcd_polygon(pcd):
 
     multipolygon = ogr.Geometry(ogr.wkbMultiPolygon)
@@ -138,9 +160,9 @@ def main():
     args = get_args()
     pcd = o3d.io.read_point_cloud(args.pcd)
     multipolygon = create_pcd_polygon(pcd)
-
-    plant_locs = pd.read_csv(args.csv)
-    print(plant_locs)
+    plant_locs = nearest_date_df(args.csv, args.date)
+    #plant_locs = pd.read_csv(args.csv)
+    #print(plant_locs)
     poly = create_pcd_polygon(pcd)
     int_dict = find_intersection(poly, plant_locs)
 
