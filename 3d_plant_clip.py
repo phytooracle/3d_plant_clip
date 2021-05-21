@@ -158,11 +158,10 @@ def main():
     """Make a jazz noise here"""
 
     args = get_args()
+    basename = os.path.splitext(os.path.basename(args.pcd))[0].split('_')[0]
     pcd = o3d.io.read_point_cloud(args.pcd)
     multipolygon = create_pcd_polygon(pcd)
     plant_locs = nearest_date_df(args.csv, args.date)
-    #plant_locs = pd.read_csv(args.csv)
-    #print(plant_locs)
     poly = create_pcd_polygon(pcd)
     int_dict = find_intersection(poly, plant_locs)
 
@@ -171,7 +170,7 @@ def main():
 
     for k, v in int_dict.items():
         plant_id = v['plant_id']
-        plant_id = plant_id.strip('( )').replace("',", "").replace("'", "").replace(' ', '_')
+        plant_id = '_'.join([plant_id.strip('( )').replace("',", "").replace("'", "").replace(' ', '_'), basename])
         plot = v['plot']
         min_x, max_y = latlon_to_utm(v['nw_lat'], v['nw_lon'])
         max_x, min_y = latlon_to_utm(v['se_lat'], v['se_lon'])
