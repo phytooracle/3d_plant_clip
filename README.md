@@ -1,22 +1,22 @@
-# 3D Plant Clip
+# 3D Point Cloud Plant Clip
 
-This dockerized script takes in a merged point cloud file and a CSV of plant locations. It will then output point clouds croped out of the original based on the plant locations given resulting in point clouds of each individual plant.
+This Docker container takes a merged point cloud and plant locations JSON file as input. It outputs individual plant point clouds with their respective plant identification numbers.
 
 
 ## Inputs
 
-* Merged point cloud
-* CSV of plant locations
+* Merged point cloud (.PLY)
+* Manually geo-corrected plant locations (.JSON)
 
 ## Outputs
 
-* Individual plant point clouds
+* Individual plant point clouds (.PLY)
 
 ## Arguments
 
-* Positional Arguments:
-    * **Merged point cloud:** 'pcd'
 * Required Arguments:
-    * **CSV containing plant locations (Latitude, Longitude):** '-c', '-csv'
+    * **JSON file containing plant locations:** '-j', '--json'
+    * **Merged point cloud:** '-p', '--pcd'
+    
 * Optional Arguments:
     * **Output Directory:** '-o', '--outdir', default = 'plantclip_out'
